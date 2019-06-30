@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.banner {
+    height: 30vh;
+    background-image: url(../images/113041-polygon-wallpaper-2560x1600-for-android.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 8vh;
+    padding-bottom: 30vh;
+    padding-left: 15vh;
+}
+
+.banner h1, .banner h4 {
+    color: white;
+}
+
+.main-content .title, .main-content .image-container, {
+    padding-left: 3vh;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+.mexico-newyork, .tokyo-paris, .bsi {
+    display: inline-block;
+    color:red;
+    width: 33%;
+}
+.travel, .host, .trust-and-safety {
+    display: inline-block;
+    color: red;
+    width: 33%;
+}
