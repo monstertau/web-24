@@ -21,7 +21,7 @@ body {
 }
 
 .menu-bar .avatar {
-    object-fit: fill;
+    object-fit: cover;
     margin-top: 20px;
     width: 250px;
     height: 250px;
