@@ -1,0 +1,94 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
+    background-color: whitesmoke;
+    
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-bar {
+    padding-left: 50px;
+    padding-right: 100px;
+    border-color: white rgb(182, 182, 182) white  white ;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.menu-bar .avatar {
+    object-fit: fill;
+    margin-top: 20px;
+    width: 250px;
+    height: 250px;
+    border-radius: 400px;
+    background-color: aqua;
+}
+
+.menu-bar .name {
+    font-weight: 1000;
+    font-size:30px;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+.menu-bar .menu {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.menu-bar .menu>* {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    text-decoration: none;
+    color: black;
+    font-weight: bolder;
+}
+.menu-bar .menu a:hover{
+    color: rgb(158, 27, 158);
+    border-bottom: 5px solid rgb(158, 27, 158);
+    width: fit-content;
+}
+.menu-bar p{
+    margin-top: 60px;
+    font-size:12px;
+}
+.services {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.services .banner{
+    font-size: 40px;
+    padding: 150px 20px 100px;
+    font-weight: 1000;
+}
+.services .icon{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 30px;
+}
+.services .icon >*{
+    width: 32%;
+    padding: 50px 0px 50px 10px;
+}
+.services .icon h4{
+    padding: 20px 0px 20px;
+}
+.services .icon p{
+    font-size: 16px;
+    font-weight: lighter;
+}
+.img {
+    background-color: rgb(158, 27, 158);
+    border: 50px;
+    padding: 10px;
+}

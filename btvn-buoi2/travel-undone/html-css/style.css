@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    position: relative;
+    margin: 0 auto;
+    font-family: Cambria;
+}
+
+.banner {
+    height: 30vh;
+    background-image: url(../images/113041-polygon-wallpaper-2560x1600-for-android.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 8vh;
+    padding-bottom: 30vh;
+    padding-left: 15vh;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+
+.main-content .title, .main-content .image-container {
+    font-size: 14px;
+    padding-left: 3vh;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+
+.main-content .title h2 {
+    padding-bottom: 20px;
+}
+
+.image-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    
+}
+
+.image-container>* {
+    text-align: center;
+    width: 33%;
+    background-size: 100%;
+    color: white;
+    font-size: 30px;
+    vertical-align: middle;
+}
+#mexico {
+    background-image: url(../images/632227.jpg);
+    height: 200px;
+    margin: 20px;
+}
+
+#newyork {
+    background-image: url(../images/632244.jpg);
+    height: 200px;
+    margin: 20px;
+}
+
+#tokyo {
+    background-image: url(../images/657128.jpg);
+    height: 200px;
+    margin: 20px;
+}
+
+#paris {
+    background-image: url(../images/6tJVMA.png);
+    height: 200px;
+    margin: 20px;
+}
+
+.bsi {
+    background-image: url(../images/ac4_Wallpaper1_1280x720.jpg);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+
+.footer{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-left: 5vh;
+    padding-top: 8vh;
+    padding-bottom: 5vh;
+    font-size: 20px;
+}
+
+.footer>* {
+    text-align: left;
+    width: 33%;
+}
+a {
+    /* text-decoration: none; */
+    color: blue;
+}
+
