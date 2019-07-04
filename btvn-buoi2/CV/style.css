@@ -55,6 +55,17 @@ body {
     border-bottom: 5px solid rgb(158, 27, 158);
     width: fit-content;
 }
+.menu-bar .button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 20px;
+}
+.menu-bar .button img{
+    margin: 10px;
+    width: 20px;
+    padding: 5%;
+}
 .menu-bar p{
     margin-top: 60px;
     font-size:12px;
