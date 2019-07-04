@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Trebuchet MS', Helvetica, sans-serif;
 }
 
 body {
@@ -12,7 +13,7 @@ body {
 
 .banner {
     height: 30vh;
-    background-image: url(../images/113041-polygon-wallpaper-2560x1600-for-android.jpg);
+    background-image: url(../images/travel.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     padding-top: 8vh;
@@ -52,34 +53,44 @@ body {
     vertical-align: middle;
 }
 #mexico {
-    background-image: url(../images/632227.jpg);
+    background-image: url(../images/mexico.jpg);
     height: 200px;
     margin: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #newyork {
-    background-image: url(../images/632244.jpg);
+    background-image: url(../images/newyork.jpg);
     height: 200px;
     margin: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #tokyo {
-    background-image: url(../images/657128.jpg);
+    background-image: url(../images/tokyo.jpg);
     height: 200px;
     margin: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #paris {
-    background-image: url(../images/6tJVMA.png);
+    background-image: url(../images/paris.jpg);
     height: 200px;
     margin: 20px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .bsi {
-    background-image: url(../images/ac4_Wallpaper1_1280x720.jpg);
+    background-image: url(../images/hanoi.jpg);
     margin-top: 20px;
     margin-bottom: 20px;
     margin-left: 15px;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .footer{
@@ -98,8 +109,12 @@ body {
     text-align: left;
     width: 33%;
 }
+.footer p,a{
+    font-size: 16px;
+}
+
 a {
-    /* text-decoration: none; */
+    text-decoration: none;
     color: blue;
 }
 
