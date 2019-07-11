@@ -1,0 +1,36 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;    
+}
+body{
+    display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.question {
+    text-align: center;
+    padding: 30px;
+    font-weight: bolder;
+    font-size: 30px;
+}
+.vote {
+    text-align: center;
+    padding-bottom: 20px;
+}
+.like-dislike {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.like{
+    width: 49%;
+    text-align: right;
+    padding-right:30px;
+}
+.dislike{
+    width: 49%;
+    text-align: left;
+    padding-left:30px;
+}

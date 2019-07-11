@@ -1,27 +1,75 @@
-let el;                                                    
+window.onload = () => {
+    //js code
+    // count characters
 
-el = document.getElementById('textcontent');                   
-el.addEventListener('keyup', ()=>{
-    let maxWord = 300;
-    let countRemaining;
-    let counter;
-    counter = document.getElementById('countWord');
-    countRemaining = (maxWord - el.value.length);
-    if(countRemaining <= 0){
-        el.value = el.value.substring(0,maxWord);
+    // listen input event of textarea
+    const textAreaElement = document.querySelector('#textcontent');
+    if (textAreaElement) {
+        textAreaElement.addEventListener('input', (event) => {
+            const content = textAreaElement.value;
+            const charactersLeft = 200 - content.length;
+            const cLeftElement = document.querySelector('#countword');
+            if (cLeftElement) {
+                cLeftElement.innerText = charactersLeft + '/200';
+            }
+
+        });
+
     }
-    counter.innerHTML = el.value.length + "/" + maxWord;
-    
-});
-let ignore = () =>{
-    let counter;
-    counter = document.getElementById('textcontent').value.length;
-    if(counter == 0){
-        document.getElementById("validate").innerHTML = "You must enter the question!";
-    }else{
-        document.getElementById("validate").innerHTML = "";
+    // listen click button event
+    const submitElement = document.querySelector('#submit-button');
+    if (submitElement) {
+        submitElement.addEventListener('click', (event) => {
+            const textAreaElement = document.querySelector('#textcontent');
+            if (textAreaElement) {
+                const content = textAreaElement.value;
+                if (!content || content.length == 0) {
+                    document.querySelector('#validate').innerText = 'Please add a question!';
+                } else {
+                    const parentElement = document.querySelector('.container');
+                    if (parentElement) {
+                        const validateElement = document.querySelector('#validate');
+                        if (validateElement) {
+                            parentElement.removeChild(validateElement);
+                        }
+                    }
+
+                    //url params
+                    // url query
+                    const content = textAreaElement.value;
+                    fetch(`/create-question`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            questionContent: content,
+                            createdAt: '20190707',
+                        }),
+                    })
+                        .then((res) => {
+                            return res.json();
+                        })
+                        .then((data)=>{
+                            if(data.success){
+                                // redirect to question detail
+                                //window.location.href
+                                window.location.href = `./question/${data.id}`;
+                            }else{
+                                window.alert(error.message);
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            window.alert(error.message);
+                        });
+                }
+            }
+        });
     }
+
 }
+
 
 // document.getElementById();
 // document.getElementsByClassName();
