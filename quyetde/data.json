@@ -1,0 +1,30 @@
+[
+	{
+		"id": 1562491629002,
+		"questionContent": "sdadfasdfasdf",
+		"like": 1,
+		"dislike": 3,
+		"createdAt": "Sun Jul 07 2019 16:27:09 GMT+0700 (Indochina Time)"
+	},
+	{
+		"id": 1562491645896,
+		"questionContent": "23123123123123",
+		"like": 4,
+		"dislike": 5,
+		"createdAt": "Sun Jul 07 2019 16:27:25 GMT+0700 (Indochina Time)"
+	},
+	{
+		"id": 1562492257703,
+		"questionContent": "new question",
+		"like": 2,
+		"dislike": 2,
+		"createdAt": "Sun Jul 07 2019 16:37:37 GMT+0700 (Indochina Time)"
+	},
+	{
+		"id": 1562492809289,
+		"questionContent": "asdlifalisjflasjfasdf",
+		"like": 2,
+		"dislike": 6,
+		"createdAt": "Sun Jul 07 2019 16:46:49 GMT+0700 (Indochina Time)"
+	}
+]

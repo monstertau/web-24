@@ -1,0 +1,19 @@
+.container {
+  width: 70%;
+  margin: 0 auto;
+}
+
+.input-question {
+  width: 100%;
+}
+
+.submit-button {
+  font-size: 14px;
+  padding: 5px 10px;
+  margin-top: 20px;
+}
+
+.error-message {
+  text-align: center;
+  color: red;
+}
