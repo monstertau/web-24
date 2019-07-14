@@ -18,6 +18,7 @@ const QuestionSchema = new mongoose.Schema({
     default: new Date(),
   },
 });
+QuestionSchema.index({questionContent:'text'});
 const questionModel = mongoose.model('Question', QuestionSchema);
 
 module.exports = questionModel;

@@ -10,8 +10,10 @@ window.onload = () => {
   })
     .then((res) => res.json())
     .then((data) => {
+      // console.log(data);
       selectedQuestion = data.data;
       document.querySelector('.question-content').innerHTML = data.data.questionContent;
+      console.log(selectedQuestion);
     })
     .catch((error) => {
       console.log(error);
@@ -25,12 +27,12 @@ window.onload = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        id: selectedQuestion.id,
+        id: selectedQuestion._id,
         vote: vote,
       }),
     })
       .then((res) => {
-        window.location.href = `/question/${selectedQuestion.id}`;
+        window.location.href = `/question/${selectedQuestion._id}`;
       })
       .catch((error) => {
         console.log(error);
@@ -48,6 +50,6 @@ window.onload = () => {
     window.location.reload();
   });
   document.querySelector('.result').addEventListener('click', () => {
-    window.location.href = `/question/${selectedQuestion.id}`;
+    window.location.href = `/question/${selectedQuestion._id}`;
   });
 };

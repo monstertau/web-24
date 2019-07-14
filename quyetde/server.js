@@ -7,7 +7,7 @@ const questionModel = require('./models/question.model');
 
 mongoose.connect(
   'mongodb://localhost:27017/quyetde',
-  {useNewUrlParser: true},
+  { useNewUrlParser: true },
   (e) => {
     if (e) {
       console.log(e);
@@ -25,6 +25,7 @@ mongoose.connect(
       });
 
       app.get('/question/:questionId', (req, res) => {
+        console.log(req.params);
         res.sendFile(path.resolve(__dirname, './public/html/question.html'));
       });
 
@@ -49,116 +50,126 @@ mongoose.connect(
             });
           }
         });
-
-        // fs.readFile('./data.json', (error, data) => {
-        //   if (error) {
-        //     res.status(500).json({
-        //       success: false,
-        //       message: error.message,
-        //     });
-        //   } else {
-        //     const questionList = JSON.parse(data);
-        //     const newQuestionId = new Date().getTime();
-        //     const newQuestion = {
-        //       id: newQuestionId,
-        //       questionContent: req.body.questionContent,
-        //       like: 0,
-        //       dislike: 0,
-        //       createdAt: new Date().toString(),
-        //     };
-        //     questionList.push(newQuestion);
-
-        //     fs.writeFile('./data.json', JSON.stringify(questionList), (error) => {
-        //       if (error) {
-        //         res.status(500).json({
-        //           success: false,
-        //           message: error.message,
-        //         });
-        //       } else {
-        //         res.status(201).json({
-        //           success: true,
-        //           id: newQuestionId,
-        //         });
-        //       }
-        //     });
-        //   }
-        // });
       });
 
       app.get('/get-question-by-id/:questionId', (req, res) => {
-        fs.readFile('./data.json', {encoding: 'utf8'}, (error, data) => {
+
+        questionModel.findById(req.params.questionId, (error, data) => {
           if (error) {
             res.status(500).json({
               success: false,
               message: error.message,
             });
           } else {
-            const listQuestions = JSON.parse(data);
-            let selectedQuestion;
-            for (let i = 0; i < listQuestions.length; i += 1) {
-              if (String(listQuestions[i].id) === req.params.questionId) {
-                selectedQuestion = listQuestions[i];
-                break;
-              }
-            }
-
+            console.log(data);
             res.status(200).json({
               success: true,
-              data: selectedQuestion,
+              data: data,
             });
           }
-        });
+        })
       });
 
       app.get('/get-random-question', (req, res) => {
-        fs.readFile('./data.json', {encoding: 'utf8'}, (error, data) => {
+        questionModel.count().exec((error, count) => {
+          if (error) {
+            res.status(500).json({
+              success: false,
+              message: error.message,
+            })
+          }
+          // Get a random entry
+          let random = Math.floor(Math.random() * count)
+
+          // Again query all users but only fetch one offset by our random #
+          questionModel.findOne().skip(random).exec(
+            (error, result) => {
+              if (error) {
+                res.status(500).json({
+                  success: false,
+                  message: error.message,
+                })
+              } else {
+                //console.log(result);
+                res.status(200).json({
+                  success: true,
+                  data: result,
+                })
+              }
+            })
+        })
+      });
+
+      app.put('/vote', (req, res) => {
+        questionModel.findById(req.body.id, (error, data) => {
           if (error) {
             res.status(500).json({
               success: false,
               message: error.message
             });
           } else {
-            const listQuestions = JSON.parse(data);
-            const randomQuestion = listQuestions[Math.floor(Math.random() * listQuestions.length)];
-            res.status(200).json({
-              success: true,
-              data: randomQuestion,
-            });
-          }
-        });
-      });
 
-      app.put('/vote', (req, res) => {
-        fs.readFile('./data.json', {encoding: 'utf8'}, (error, data) => {
+            let updateVote = req.body.vote;
+            console.log(updateVote);
+            if (updateVote === 'like') {
+              questionModel.findByIdAndUpdate(data._id, { $inc: { like: 1 } }, (error, data) => {
+                if (error) throw error;
+                else {
+                  console.log(data);
+                  res.status(201).json({
+                    success: true,
+                  })
+                }
+              })
+            }
+            if (updateVote === 'dislike') {
+              questionModel.findByIdAndUpdate(data._id, {
+                $inc: { dislike: 1 }
+              }, (error, data) => {
+                if (error) throw error;
+                else {
+                  console.log(data);
+                  res.status(201).json({
+                    success: true,
+                  })
+                }
+              })
+            }
+            console.log(data)
+          }
+        })
+
+      });
+      app.get('/find', (req, res) => {
+        res.sendFile(path.resolve(__dirname, './public/html/find.html'));
+      })
+      function escapeRegex(text) {
+        return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      };
+      app.post('/find-question', (req, res) => {
+        let questionFind = req.body.questionContent;
+        console.log(questionFind);
+        const regex = new RegExp(escapeRegex(questionFind), 'gi');
+        questionModel.find({ questionContent: regex }, (error, data) => {
           if (error) {
             res.status(500).json({
               success: false,
-              message: error.message,
+              message: error.message
             })
           } else {
-            const listQuestions = JSON.parse(data);
-            for (let i = 0; i < listQuestions.length; i += 1) {
-              if (listQuestions[i].id === req.body.id) {
-                listQuestions[i][req.body.vote] += 1;
-              }
-            }
-
-            fs.writeFile('./data.json', JSON.stringify(listQuestions), (err) => {
-              if (err) {
-                res.status(500).json({
-                  success: false,
-                  message: err.message,
-                });
-              } else {
-                res.status(201).json({
-                  success: true,
-                });
-              }
-            });
+            console.log(data)
+            res.status(201).json({
+              success: true,
+              data: data,
+            })
           }
-        });
-      });
-
+        })
+      })
+      
+      app.get('/find/:content', (req, res) => {
+        // console.log(req.params);
+        res.sendFile(path.resolve(__dirname, './public/html/findlist.html'));
+      })
       app.listen(3000);
     }
   },

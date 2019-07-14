@@ -7,7 +7,7 @@ window.onload = () => {
     textareaElement.addEventListener('input', (event) => {
       const content = textareaElement.value;
       const chactersLeft = 200 - content.length;
-      
+
       // display chactersLeft
       const chactersLeftElement = document.querySelector('.characters-left');
       if (chactersLeftElement) {
@@ -61,7 +61,6 @@ window.onload = () => {
             .then((data) => {
               if (data.success) {
                 // redirect to question detail
-                
                 window.location.href = `/question/${data.id}`;
               } else {
                 window.alert(data.message);
