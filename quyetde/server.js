@@ -71,32 +71,24 @@ mongoose.connect(
       });
 
       app.get('/get-random-question', (req, res) => {
-        questionModel.count().exec((error, count) => {
-          if (error) {
+        questionModel.aggregate([
+          {$sample:{size:1}}
+        ]).exec((error,data)=>{
+          if(error){
             res.status(500).json({
-              success: false,
+              success:false,
               message: error.message,
             })
-          }
-          // Get a random entry
-          let random = Math.floor(Math.random() * count)
-
-          // Again query all users but only fetch one offset by our random #
-          questionModel.findOne().skip(random).exec(
-            (error, result) => {
-              if (error) {
-                res.status(500).json({
-                  success: false,
-                  message: error.message,
-                })
-              } else {
-                //console.log(result);
-                res.status(200).json({
-                  success: true,
-                  data: result,
-                })
+          }else{
+            console.log(data);
+            res.status(200).json({
+              success:true,
+              data:{
+                ...data[0],
+                data: data[0],
               }
             })
+          }
         })
       });
 
@@ -108,11 +100,15 @@ mongoose.connect(
               message: error.message
             });
           } else {
-
+            if(!data){
+              res.status(404).json({
+                success:false,
+                message: `Question not found`,
+              })
+            }
             let updateVote = req.body.vote;
             console.log(updateVote);
-            if (updateVote === 'like') {
-              questionModel.findByIdAndUpdate(data._id, { $inc: { like: 1 } }, (error, data) => {
+              questionModel.findByIdAndUpdate(data._id, { $inc: { [req.body.vote]: 1 } }, (error, data) => {
                 if (error) throw error;
                 else {
                   console.log(data);
@@ -121,20 +117,6 @@ mongoose.connect(
                   })
                 }
               })
-            }
-            if (updateVote === 'dislike') {
-              questionModel.findByIdAndUpdate(data._id, {
-                $inc: { dislike: 1 }
-              }, (error, data) => {
-                if (error) throw error;
-                else {
-                  console.log(data);
-                  res.status(201).json({
-                    success: true,
-                  })
-                }
-              })
-            }
             console.log(data)
           }
         })

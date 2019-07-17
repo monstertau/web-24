@@ -1,8 +1,10 @@
+.navbar{
+  margin-bottom:20px;
+}
 .container {
   width: 70%;
   margin: 0 auto;
 }
-
 .input-question {
   width: 100%;
 }

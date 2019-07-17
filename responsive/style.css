@@ -1,0 +1,34 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 70vw;
+  margin: 0 auto;
+  display: flex;
+}
+
+.main-content {
+  width: 75%;
+}
+
+.side-bar {
+  width: 25%;
+  padding-left: 40px;
+}
+
+@media screen and (max-width:500px) {
+  .side-bar{
+    display:none;
+  }
+  .main-content{
+    width: 100%;
+  }
+}
+/* 
+sm:  576px
+md: 768px
+lg: 992px
+xl: 1200px */

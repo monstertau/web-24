@@ -11,7 +11,7 @@ window.onload = () => {
       // display chactersLeft
       const chactersLeftElement = document.querySelector('.characters-left');
       if (chactersLeftElement) {
-        chactersLeftElement.innerText = `${chactersLeft} characters left`;
+        chactersLeftElement.innerHTML = `<p class="text-muted">Còn ${chactersLeft}/200 kí tự<p>`;
       }
     });
   }

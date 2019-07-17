@@ -13,7 +13,7 @@ window.onload = () => {
       console.log(data);
       if (data.data) {
         document.querySelector('.question-content').innerHTML = data.data.questionContent;
-        document.querySelector('.total-vote').innerHTML = data.data.like + data.data.dislike;
+        document.querySelector('.total-vote').innerHTML = data.data.like + data.data.dislike + ' vote';
 
         let likePercent = data.data.like;
         let dislikePercent = data.data.dislike;
@@ -22,11 +22,11 @@ window.onload = () => {
           dislikePercent = 50;
         } else {
           likePercent = (data.data.like / (data.data.like + data.data.dislike) * 100).toFixed(2);
-          dislikePercent = 100 - Number(likePercent);
+          dislikePercent = (100 - Number(likePercent)).toFixed(2);
         }
 
-        document.querySelector('.dislike').innerHTML = `${dislikePercent}%`;
-        document.querySelector('.like').innerHTML = `${likePercent}%`;
+        document.querySelector('.result').insertAdjacentHTML(`beforeend`,`<div class="like" style="width:${dislikePercent}%;background-color: #d9534f"><i class="far fa-thumbs-down"></i> ${dislikePercent}%</div>`);
+        document.querySelector('.result').insertAdjacentHTML(`beforeend`,`<div class="dislike" style="width:${likePercent}%;background-color: #337ab7"><i class="far fa-thumbs-up"></i> ${likePercent}%</div>`);
       } else {
         window.alert('Question not found');
       }

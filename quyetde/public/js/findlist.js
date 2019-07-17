@@ -14,7 +14,8 @@ window.onload = () => {
     .then((res) => res.json())
     .then((data) => {
       console.log(data);
-      const searchBoxElement = document.querySelector('.searchbox')
+      const searchBoxElement = document.querySelector('.searchbox');
+      searchBoxElement.innerHTML = "";
       if (searchBoxElement) {
         for (let i = 0; i < data.data.length; i++) {
           searchBoxElement.insertAdjacentHTML(

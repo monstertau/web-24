@@ -1,0 +1,6 @@
+.question-content, .vote-btn, .other-btn{
+  margin-top:60px;
+}
+.question-content{
+  font-size: 50px;
+} 
