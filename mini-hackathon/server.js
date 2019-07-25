@@ -89,7 +89,7 @@ mongoose.connect(
                 message: `Game not found`,
               })
             }
-            playerModel.findByIdAndUpdate(data._id, { $inc: { round: 1 } }, (error, data) => {
+            playerModel.findByIdAndUpdate(data._id, { $inc: { round: 1 } ,$push: { score: [0,0,0,0] } }, (error, data) => {
               if (error) throw error;
               else {
                 console.log(data);
