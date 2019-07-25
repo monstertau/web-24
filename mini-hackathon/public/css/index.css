@@ -1,0 +1,19 @@
+.main-container{
+    background-color: #FBFEF9;
+    text-align: center;
+}
+
+.main-container .input-group .form-control{
+    width: 500px;
+    height: 50px;
+    background-color: white;
+    border-color: coral;
+    border-radius: 20px;
+}
+
+.main-container .create{
+    width: 500px;
+    height: 50px;
+    background-color: #c92d2d;
+    color: #FBFEF9;
+}
