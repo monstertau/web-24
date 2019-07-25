@@ -103,6 +103,38 @@ mongoose.connect(
           }
         })
       })
+      app.put('/update-score', (req, res) => {
+        playerModel.findById(req.body.id, (error, data) => {
+          if (error) {
+            res.status(500).json({
+              success: false,
+              message: error.message
+            });
+          } else {
+            if (!data) {
+              res.status(404).json({
+                success: false,
+                message: `Game not found`,
+              })
+            }
+            // console.log(req.body.score)
+            // res.status(201).json({
+            //   success:true,
+            // })
+            playerModel.findByIdAndUpdate(data._id, { score: req.body.score }, (error, data) => {
+              if (error) throw error;
+              else {
+                console.log(data);
+                res.status(201).json({
+                  success: true,
+                  data: data,
+                })
+              }
+            })
+            
+          }
+        })
+      })
 
 
       app.listen(8080);

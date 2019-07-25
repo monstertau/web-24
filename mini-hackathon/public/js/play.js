@@ -34,16 +34,15 @@ window.onload = () => {
             `beforeend`,
             `<div>
         Round${i}
-        <input type="number" class="round${i}player1 score" value = "2">
-        <input type="number" class="round${i}player2 score" value = "2">
-        <input type="number" class="round${i}player3 score" value = "2">
-        <input type="number" class="round${i}player4 score" value = "2">
+        <input type="number" class="round${i}player1 score" value = "${data.data.score[i-1][0]}">
+        <input type="number" class="round${i}player2 score" value = "${data.data.score[i-1][1]}">
+        <input type="number" class="round${i}player3 score" value = "${data.data.score[i-1][2]}">
+        <input type="number" class="round${i}player4 score" value = "${data.data.score[i-1][3]}">
         </div>
         `
           )
         }
       }
-      let sumTemp = 0;
 
     })
     .catch((error) => {
@@ -54,6 +53,7 @@ window.onload = () => {
 
   let buttonElements = document.querySelector('.newRoundButton');
   let playerNameElements = document.querySelector('.playerName');
+
   buttonElements.addEventListener('click', (event) => {
     event.preventDefault();
 
@@ -75,10 +75,10 @@ window.onload = () => {
             `beforeend`,
             `<div>
               Round${data.data.round + 1}
-              <input type="number" class="round${data.data.round + 1}player1 score">
-              <input type="number" class="round${data.data.round + 1}player2 score">
-              <input type="number" class="round${data.data.round + 1}player3 score">
-              <input type="number" class="round${data.data.round + 1}player4 score">
+              <input type="number" class="round${data.data.round + 1}player1 score" value = "0">
+              <input type="number" class="round${data.data.round + 1}player2 score" value = "0">
+              <input type="number" class="round${data.data.round + 1}player3 score" value = "0">
+              <input type="number" class="round${data.data.round + 1}player4 score" value = "0">
               </div>
               `
           )
@@ -91,7 +91,28 @@ window.onload = () => {
       })
 
   });
-  document.querySelector('.roundTable').addEventListener('input', (event) => {
+  function on(elSelector, eventName, selector, fn) {
+    var element = document.querySelector(elSelector);
+
+    element.addEventListener(eventName, function(event) {
+        var possibleTargets = element.querySelectorAll(selector);
+        var target = event.target;
+
+        for (var i = 0, l = possibleTargets.length; i < l; i++) {
+            var el = target;
+            var p = possibleTargets[i];
+
+            while(el && el !== element) {
+                if (el === p) {
+                    return fn.call(p, event);
+                }
+
+                el = el.parentNode;
+            }
+        }
+    });
+}
+  on('.roundTable','input','.score', (event) => {
     console.log(roundUpdate)
     event.preventDefault();
     tempScore = new Array(roundUpdate);
@@ -104,11 +125,31 @@ window.onload = () => {
 
       for (let j = 1; j <= roundUpdate; j++) {
         let scoreUpdate = document.querySelector(`.round${j}player${i}`);
-        tempScore[j-1][i] = Number(scoreUpdate.value);
+        tempScore[j-1][i-1] = Number(scoreUpdate.value);
         sumTemp += Number(scoreUpdate.value);
       }
       document.querySelector(`.sum${i}`).innerHTML = sumTemp;
     }
     console.log(tempScore);
+    fetch(`/update-score`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: gameId,
+        score: tempScore,
+      })
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        window.alert(error.message);
+      })
   })
+
+ 
 }
