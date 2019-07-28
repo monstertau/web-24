@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import './App.css';
 let nextPageToken;
 class App extends React.Component {
@@ -6,7 +7,7 @@ class App extends React.Component {
     result: [],
     inputWord: ''
   }
-  handleResult = (event) => {
+  handleResult = _.debounce((event) => {
     event.preventDefault();
     fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=25&q=${this.state.inputWord}&type=video&key=AIzaSyA9gQZ-oYomFypZN7PsupZJtOfQqA6Q3qw`, {
       method: 'GET',
@@ -23,7 +24,7 @@ class App extends React.Component {
           result: data.items,
         });
         console.log(this.state.result);
-        window.onscroll = function (event) {
+        window.onscroll =  _.debounce((event) =>{
           event.preventDefault();
           var d = document.documentElement;
           var offset = d.scrollTop + window.innerHeight;
@@ -72,10 +73,10 @@ class App extends React.Component {
                 }
               })
           }
-        };
+        },1000);
       })
 
-  }
+  },1000);
   render() {
     return (
 
