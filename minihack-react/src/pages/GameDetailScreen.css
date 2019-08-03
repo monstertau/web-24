@@ -1,0 +1,16 @@
+.playerName {
+  display: flex;
+  flex-direction: row;
+}
+
+.playerName>* {
+  margin: 10px;
+}
+
+.sum-of-score {
+  display: flex;
+}
+
+.sum-of-score>* {
+  margin: 10px;
+}
