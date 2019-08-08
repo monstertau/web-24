@@ -3,7 +3,7 @@ const userRouter = express.Router();
 const bcryptjs = require("bcryptjs");
 const userModel = require("./users.model");
 const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
+let profileData;
 userRouter.get("/test", (req, res) => {
   console.log("Current User:", req.session.currentUser);
   res.json({
@@ -13,6 +13,7 @@ userRouter.get("/test", (req, res) => {
 
 userRouter.post("/register", (req, res) => {
   //get email + pw from req.body
+
   const { email, password, fullName } = req.body;
   if (!email || !emailRegex.test(email)) {
     res.status(400).json({
@@ -70,54 +71,75 @@ userRouter.post("/register", (req, res) => {
 });
 
 userRouter.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !emailRegex.test(email)) {
-    res.status(400).json({
-      success: false,
-      message: "Invalid email address"
-    });
-  } else if (!password || password.length < 6) {
-    res.status(400).json({
-      success: false,
-      message: "Password must be at least 6 characters"
+  if (req.session.currentUser) {
+    res.status(201).json({
+      success: true,
+      message: "Login success"
     });
   } else {
-    userModel.findOne({ email: email }, (error, data) => {
-      if (error) {
-        res.status(500).json({
-          success: false,
-          message: error.message
-        });
-      } else if (!data) {
-        res.status(400).json({
-          success: false,
-          message: "Email didn't exist"
-        });
-      } else {
-        const checkValidPassword = bcryptjs.compareSync(
-          password,
-          data.password
-        );
-        if (!checkValidPassword) {
+    const { email, password } = req.body;
+    if (!email || !emailRegex.test(email)) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid email address"
+      });
+    } else if (!password || password.length < 6) {
+      res.status(400).json({
+        success: false,
+        message: "Password must be at least 6 characters"
+      });
+    } else {
+      userModel.findOne({ email: email }, (error, data) => {
+        if (error) {
+          res.status(500).json({
+            success: false,
+            message: error.message
+          });
+        } else if (!data) {
           res.status(400).json({
             success: false,
-            message: "Wrong Password"
+            message: "Email didn't exist"
           });
         } else {
-          req.session.currentUser = {
-            _id: data._id,
-            email: data.email,
-            fullName: data.fullName
-          };
-          res.status(201).json({
-            success: true,
-            message: "Login success"
-          });
+          const checkValidPassword = bcryptjs.compareSync(
+            password,
+            data.password
+          );
+          if (!checkValidPassword) {
+            res.status(400).json({
+              success: false,
+              message: "Wrong Password"
+            });
+          } else {
+            req.session.currentUser = {
+              _id: data._id,
+              email: data.email,
+              fullName: data.fullName
+            };
+            res.status(201).json({
+              success: true,
+              message: "Login success"
+            });
+          }
         }
-      }
+      });
+    }
+  }
+});
+userRouter.get("/profile", (req, res) => {
+  if (req.session.currentUser) {
+    res.status(201).json({
+      success: true,
+      data: req.session
+    });
+  } else {
+    res.status(400).json({
+      success: false,
+      message: "Session not found"
     });
   }
 });
+
 userRouter.get("/logout", (req, res) => {
   req.session.destroy(err => {
     if (err) {
@@ -125,12 +147,11 @@ userRouter.get("/logout", (req, res) => {
         success: false,
         message: err.message
       });
-    }
-    else{
+    } else {
       res.status(201).json({
-        success:true,
-        message:'Logout success',
-      })
+        success: true,
+        message: "Logout success"
+      });
     }
   });
 });
