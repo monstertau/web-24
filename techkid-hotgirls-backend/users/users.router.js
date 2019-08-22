@@ -1,158 +1,136 @@
-const express = require("express");
+const express = require('express');
+const UserModel = require('./users.model');
+const bcryptjs = require('bcryptjs');
+
 const userRouter = express.Router();
-const bcryptjs = require("bcryptjs");
-const userModel = require("./users.model");
-const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-let profileData;
-userRouter.get("/test", (req, res) => {
-  console.log("Current User:", req.session.currentUser);
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+userRouter.get('/test', (req, res) => {
+  console.log('Current User: ', req.session.currentUser);
+
   res.json({
-    success: true
+    success: true,
   });
 });
 
-userRouter.post("/register", (req, res) => {
-  //get email + pw from req.body
-
+userRouter.post('/register', (req, res) => {
+  // get email + pw + fullName from req.body
   const { email, password, fullName } = req.body;
+
+  // validate email, pw, fullName
   if (!email || !emailRegex.test(email)) {
     res.status(400).json({
       success: false,
-      message: "Invalid email address"
+      message: 'Invalid email adress',
     });
   } else if (!password || password.length < 6) {
     res.status(400).json({
       success: false,
-      message: "Password must be at least 6 characters"
+      message: 'Password must be at least 6 characters',
     });
   } else if (!fullName) {
     res.status(400).json({
       success: false,
-      message: "Please input full name"
+      message: 'Please input full name',
     });
-  }
-  userModel.findOne({ email: email }, (error, data) => {
-    if (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
-    } else if (data) {
-      res.status(400).json({
-        success: false,
-        message: "Email has been used"
-      });
-    } else {
-      const hashPassword = bcryptjs.hashSync(password, 10);
-      userModel.create(
-        {
+  } else {
+    // check email exist
+    UserModel.findOne({email: email}, (error, data) => {
+      if (error) {
+        res.status(500).json({
+          success: false,
+          message: error.message,
+        });
+      } else if (data) {
+        res.status(400).json({
+          success: false,
+          message: 'Email has beed used',
+        });
+      } else {
+        // hash password
+        const hashPassword = bcryptjs.hashSync(password, 10);
+
+        // save to db
+        UserModel.create({
           ...req.body,
-          password: hashPassword
-        },
-        (err, newUser) => {
+          password: hashPassword,
+        }, (err, newUser) => {
           if (err) {
             res.status(500).json({
               success: false,
-              message: err.message
+              message: err.message,
             });
           } else {
             res.status(201).json({
               success: true,
               data: {
                 ...newUser._doc,
-                password: ""
-              }
+                password: '',
+              },
             });
           }
-        }
-      );
+        });
+      }
+    });
+  }
+});
+
+userRouter.post('/login', (req, res) => {
+  // get email + pw from req.body
+  const { email, password } = req.body;
+
+  // check email exist
+  UserModel.findOne({email: email}, (error, data) => {
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    } else if (!data) {
+      res.status(400).json({
+        success: false,
+        message: 'Email didnt exist',
+      });
+    } else if (!bcryptjs.compareSync(password, data.password)) {
+      // compare password
+      res.status(400).json({
+        success: false,
+        message: 'Wrong password'
+      });
+    } else {
+      // save currentUser info to session storage
+      req.session.currentUser = {
+        _id: data._id,
+        email: data.email,
+        fullName: data.fullName,
+      };
+
+      res.status(200).json({
+        success: true,
+        message: 'Login success',
+        data: {
+          email: data.email,
+          fullName: data.fullName,
+        },
+      });
     }
   });
 });
 
-userRouter.post("/login", (req, res) => {
-  if (req.session.currentUser) {
-    res.status(201).json({
-      success: true,
-      message: "Login success"
-    });
-  } else {
-    const { email, password } = req.body;
-    if (!email || !emailRegex.test(email)) {
-      res.status(400).json({
-        success: false,
-        message: "Invalid email address"
-      });
-    } else if (!password || password.length < 6) {
-      res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters"
-      });
-    } else {
-      userModel.findOne({ email: email }, (error, data) => {
-        if (error) {
-          res.status(500).json({
-            success: false,
-            message: error.message
-          });
-        } else if (!data) {
-          res.status(400).json({
-            success: false,
-            message: "Email didn't exist"
-          });
-        } else {
-          const checkValidPassword = bcryptjs.compareSync(
-            password,
-            data.password
-          );
-          if (!checkValidPassword) {
-            res.status(400).json({
-              success: false,
-              message: "Wrong Password"
-            });
-          } else {
-            req.session.currentUser = {
-              _id: data._id,
-              email: data.email,
-              fullName: data.fullName
-            };
-            res.status(201).json({
-              success: true,
-              message: "Login success"
-            });
-          }
-        }
-      });
-    }
-  }
-});
-userRouter.get("/profile", (req, res) => {
-  if (req.session.currentUser) {
-    res.status(201).json({
-      success: true,
-      data: req.session
-    });
-  } else {
-    res.status(400).json({
-      success: false,
-      message: "Session not found"
-    });
-  }
-});
-
-userRouter.get("/logout", (req, res) => {
-  req.session.destroy(err => {
+userRouter.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
     if (err) {
       res.status(500).json({
         success: false,
-        message: err.message
+        message: err.message,
       });
     } else {
-      res.status(201).json({
+      res.status(200).json({
         success: true,
-        message: "Logout success"
+        message: 'Logout success',
       });
     }
   });
 });
+
 module.exports = userRouter;

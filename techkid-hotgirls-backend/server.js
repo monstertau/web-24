@@ -1,50 +1,42 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const userRouter = require("./users/users.router");
-const session = require("express-session");
-mongoose.connect("mongodb://localhost:27017/techkid-hotgirls", error => {
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const userRouter = require('./users/users.router');
+const session = require('express-session');
+const cors = require('cors');
+const postRouter = require('./posts/posts.router');
+const uploadRouter = require('./uploads/uploads.router');
+
+mongoose.connect('mongodb://localhost:27017/techkid-hotgirls', (error) => {
   if (error) {
     throw error;
   } else {
-    console.log("Connect to mongodb success!");
+    console.log('Connect to mongodb success ...');
     const app = express();
+
+    // use middleware
+    app.use(cors({
+      origin: 'http://localhost:3000',
+      credentials: true,
+    }));
     app.use(bodyParser.json());
-    app.use(function(req, res, next) {
-      // Website you wish to allow to connect
-      res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    app.use(session({
+      secret: 'keyboard cat',
+    }));
+    app.use(express.static('public'))
 
-      // Request methods you wish to allow
-      res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-      );
+    // routers
+    // /users/test
+    app.use('/users', userRouter);
+    app.use('/posts', postRouter);
+    app.use('/uploads', uploadRouter);
 
-      // Request headers you wish to allow
-      res.setHeader(
-        "Access-Control-Allow-Headers",
-        "X-Requested-With,content-type"
-      );
-
-      // Set to true if you need the website to include cookies in the requests sent
-      // to the API (e.g. in case you use sessions)
-      res.setHeader("Access-Control-Allow-Credentials", true);
-
-      // Pass to next layer of middleware
-      next();
-    });
-
-    app.use(
-      session({
-        secret: "keyboard cat"
-      })
-    );
-    app.use("/users", userRouter);
-    app.listen(3001, err => {
+    // start server
+    app.listen(3001, (err) => {
       if (err) {
         throw err;
       }
-      console.log("Server listen on port 3001...");
+      console.log('Server listen on port 3001 ...');
     });
   }
 });
